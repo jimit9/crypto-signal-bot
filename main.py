@@ -1,18 +1,28 @@
+import os
 import requests
 import time
 
-# === CONFIG ===
-BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
-CHAT_ID = "YOUR_CHAT_ID"  # Replace with your Telegram ID (@jimitt)
+# Read env variables
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
-def send_signal():
-    message = "🚀 Test Signal\nPair: BTC/USDT\nAction: BUY\nSL: 2%\nTarget: 5%"
+print("BOT_TOKEN:", BOT_TOKEN)
+print("CHAT_ID:", CHAT_ID)
+
+# Function to send Telegram messages
+def send_telegram_message(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": CHAT_ID, "text": message}
-    response = requests.post(url, data=payload)
-    print("Sent:", response.json())
+    resp = requests.post(url, data={"chat_id": CHAT_ID, "text": text})
+    print("Telegram API response:", resp.text)
+    return resp.json()
 
-if __name__ == "__main__":
-    while True:
-        send_signal()
-        time.sleep(3600)  # sends every 1 hour for demo
+# Send startup test message
+try:
+    send_telegram_message("🚀 Bot Started Successfully on Railway ✅")
+except Exception as e:
+    print("Error sending startup message:", e)
+
+# Dummy loop (replace with your trading logic later)
+while True:
+    print("Bot running...")  
+    time.sleep(60)
